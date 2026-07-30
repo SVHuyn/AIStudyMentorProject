@@ -11,6 +11,7 @@ import com.example.realprojectaistudymentor.fragment.AskQuestionFragment;
 import com.example.realprojectaistudymentor.fragment.HistoryFragment;
 import com.example.realprojectaistudymentor.fragment.HomeFragment;
 import com.example.realprojectaistudymentor.fragment.ProfileFragment;
+import com.example.realprojectaistudymentor.fragment.ProgressFragment;
 import com.example.realprojectaistudymentor.fragment.QuizFragment;
 import com.example.realprojectaistudymentor.utils.SessionManager;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -53,6 +54,8 @@ public class MainActivity extends AppCompatActivity {
                 fragment = new HistoryFragment();
             } else if (id == R.id.nav_profile) {
                 fragment = new ProfileFragment();
+            } else if (id == R.id.nav_progress) {
+                fragment = new ProgressFragment();
             }
 
             if (fragment != null) {

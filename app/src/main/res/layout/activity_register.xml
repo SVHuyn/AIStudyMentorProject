@@ -1,6 +1,225 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/background"
+    android:padding="24dp">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <!-- ===== STEP 1: Register ===== -->
+        <LinearLayout
+            android:id="@+id/layout_step1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="24dp"
+                android:text="Create Account"
+                android:textColor="@color/text_primary"
+                android:textSize="24sp"
+                android:textStyle="bold" />
+
+            <!-- Full Name -->
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
+                android:hint="Full Name">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/et_full_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <!-- Email -->
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
+                android:hint="Email">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/et_email"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textEmailAddress" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <!-- Password -->
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="4dp"
+                android:hint="Password"
+                app:passwordToggleEnabled="true">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/et_password"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textPassword" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <!-- Password strength indicator -->
+            <TextView
+                android:id="@+id/tv_password_strength"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:layout_marginBottom="12dp"
+                android:text="Strength: "
+                android:textSize="12sp" />
+
+            <!-- Confirm Password -->
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="24dp"
+                android:hint="Confirm Password"
+                app:passwordToggleEnabled="true">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/et_confirm_password"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textPassword" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <Button
+                android:id="@+id/btn_next"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:backgroundTint="@color/primary"
+                android:text="Next →" />
+        </LinearLayout>
+
+        <!-- ===== STEP 2: Onboarding (hidden by default) ===== -->
+        <LinearLayout
+            android:id="@+id/layout_step2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="24dp"
+                android:text="Personalise Your Experience"
+                android:textColor="@color/text_primary"
+                android:textSize="22sp"
+                android:textStyle="bold" />
+
+            <!-- Education level -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:text="Education Level"
+                android:textStyle="bold" />
+
+            <Spinner
+                android:id="@+id/spinner_education_level"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="24dp" />
+
+            <!-- Subjects -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:text="Subjects of Interest"
+                android:textStyle="bold" />
+
+            <CheckBox
+                android:id="@+id/cb_math"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Mathematics" />
+
+            <CheckBox
+                android:id="@+id/cb_science"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Science" />
+
+            <CheckBox
+                android:id="@+id/cb_programming"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Programming" />
+
+            <CheckBox
+                android:id="@+id/cb_history"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="History" />
+
+            <CheckBox
+                android:id="@+id/cb_languages"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="24dp"
+                android:text="Languages" />
+
+            <!-- Explanation style -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:text="Preferred Explanation Style"
+                android:textStyle="bold" />
+
+            <RadioGroup
+                android:id="@+id/rg_explanation_style"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="24dp">
+
+                <RadioButton
+                    android:id="@+id/rb_short"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:tag="short"
+                    android:text="Short &amp; Simple" />
+
+                <RadioButton
+                    android:id="@+id/rb_detailed"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:tag="detailed"
+                    android:text="Detailed" />
+
+                <RadioButton
+                    android:id="@+id/rb_step_by_step"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:tag="step_by_step"
+                    android:text="Step-by-Step" />
+            </RadioGroup>
+
+            <Button
+                android:id="@+id/btn_finish"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:backgroundTint="@color/success"
+                android:text="Start Learning 🚀" />
+        </LinearLayout>
+
+    </LinearLayout>
+</ScrollView>
