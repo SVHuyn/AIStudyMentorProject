@@ -9,10 +9,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -37,7 +39,8 @@ public class AskQuestionFragment extends Fragment {
     private static final int PICK_IMAGE = 100;
 
     // Views
-    private EditText etQuestion, etSubject;
+    private EditText etQuestion;
+    private Spinner spinnerSubject;
     private Button btnAsk, btnUploadImage;
     private ImageView ivPreview;
     private ProgressBar progressBar;
@@ -67,9 +70,9 @@ public class AskQuestionFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         // Init views
-        etQuestion     = view.findViewById(R.id.et_question);
-        etSubject      = view.findViewById(R.id.et_subject);
-        btnAsk         = view.findViewById(R.id.btn_ask);
+        etQuestion      = view.findViewById(R.id.et_question);
+        spinnerSubject  = view.findViewById(R.id.spinner_subject);
+        btnAsk          = view.findViewById(R.id.btn_ask);
         btnUploadImage = view.findViewById(R.id.btn_upload_image);
         ivPreview      = view.findViewById(R.id.iv_image_preview);
         progressBar    = view.findViewById(R.id.progress_bar);
@@ -90,6 +93,9 @@ public class AskQuestionFragment extends Fragment {
         rvAnswer.setLayoutManager(new LinearLayoutManager(requireContext()));
         rvAnswer.setAdapter(answerAdapter);
 
+        // Setup subject spinner
+        setupSubjectSpinner();
+
         // Bấm Ask → gọi AI
         btnAsk.setOnClickListener(v -> submitQuestion());
 
@@ -100,16 +106,39 @@ public class AskQuestionFragment extends Fragment {
         });
     }
 
+    /**
+     * Setup spinner chọn môn học.
+     */
+    private void setupSubjectSpinner() {
+        String[] subjects = {
+                "General",
+                "Math",
+                "Physics",
+                "Chemistry",
+                "Biology",
+                "History",
+                "Geography",
+                "English",
+                "Programming"
+        };
+        ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(
+                requireContext(),
+                android.R.layout.simple_spinner_item,
+                subjects
+        );
+        spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerSubject.setAdapter(spinnerAdapter);
+    }
+
     private void submitQuestion() {
         String questionText = etQuestion.getText().toString().trim();
-        String subject      = etSubject.getText().toString().trim();
+        String subject      = spinnerSubject.getSelectedItem().toString();
 
         // Validate
         if (questionText.isEmpty()) {
             etQuestion.setError("Please enter your question");
             return;
         }
-        if (subject.isEmpty()) subject = "General";
 
         if (!Helper.isNetworkAvailable(requireContext())) {
             tvError.setText("No internet connection");

@@ -7,9 +7,9 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.Spinner;
 import android.widget.ProgressBar;
 import android.widget.ScrollView;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -31,7 +31,6 @@ import com.example.realprojectaistudymentor.repository.QuizRepository;
 import com.example.realprojectaistudymentor.repository.UserRepository;
 import com.example.realprojectaistudymentor.utils.Constants;
 import com.example.realprojectaistudymentor.utils.SessionManager;
-import com.google.android.material.textfield.TextInputEditText;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,7 +45,7 @@ public class QuizFragment extends Fragment {
 
     // Setup panel
     private ScrollView layoutQuizSetup;
-    private TextInputEditText etSubject;
+    private Spinner spinnerSubject;
     private Spinner spinnerDifficulty;
     private Button btnGenerate;
     private TextView tvError;
@@ -96,7 +95,7 @@ public class QuizFragment extends Fragment {
 
         // Bind setup panel
         layoutQuizSetup = view.findViewById(R.id.layout_quiz_setup);
-        etSubject = view.findViewById(R.id.et_quiz_subject);
+        spinnerSubject = view.findViewById(R.id.spinner_quiz_subject);
         spinnerDifficulty = view.findViewById(R.id.spinner_difficulty);
         btnGenerate = view.findViewById(R.id.btn_generate_quiz);
         tvError = view.findViewById(R.id.tv_quiz_error);
@@ -116,6 +115,7 @@ public class QuizFragment extends Fragment {
         btnViewHistorySetup = view.findViewById(R.id.btn_view_history_setup);
 
         setupDifficultySpinner();
+        setupSubjectSpinner();
         setupRecyclerView();
 
         // Nút Generate Quiz
@@ -151,6 +151,30 @@ public class QuizFragment extends Fragment {
     }
 
     /**
+     * Setup spinner chọn môn học.
+     */
+    private void setupSubjectSpinner() {
+        String[] subjects = {
+                "General",
+                "Math",
+                "Physics",
+                "Chemistry",
+                "Biology",
+                "History",
+                "Geography",
+                "English",
+                "Programming"
+        };
+        ArrayAdapter<String> subjectAdapter = new ArrayAdapter<>(
+                requireContext(),
+                android.R.layout.simple_spinner_item,
+                subjects
+        );
+        subjectAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerSubject.setAdapter(subjectAdapter);
+    }
+
+    /**
      * Setup RecyclerView + QuizAdapter.
      */
     private void setupRecyclerView() {
@@ -170,13 +194,7 @@ public class QuizFragment extends Fragment {
      * Validate input và gọi AI tạo quiz.
      */
     private void generateQuiz() {
-        String subject = etSubject.getText().toString().trim();
-        if (subject.isEmpty()) {
-            tvError.setText("Please enter a subject");
-            tvError.setVisibility(View.VISIBLE);
-            return;
-        }
-
+        String subject = spinnerSubject.getSelectedItem().toString();
         String difficulty = spinnerDifficulty.getSelectedItem().toString();
         tvError.setVisibility(View.GONE);
 
