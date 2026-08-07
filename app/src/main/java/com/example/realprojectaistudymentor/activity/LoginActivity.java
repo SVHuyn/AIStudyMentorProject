@@ -7,8 +7,15 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
+import android.os.Build;
+import android.view.View;
 import com.example.realprojectaistudymentor.MainActivity;
 import com.example.realprojectaistudymentor.R;
 import com.example.realprojectaistudymentor.database.entity.UserEntity;
@@ -59,12 +66,50 @@ public class LoginActivity extends AppCompatActivity {
             return;
         }
 
-        // Kiểm tra 2FA (optional theo tài liệu)
-        if (user.isTwoFactorEnabled) {
-            // TODO: gửi OTP và mở màn hình xác thực 2FA
-            Toast.makeText(this, "2FA: OTP sent to " + email, Toast.LENGTH_SHORT).show();
+        // Xin quyền thông báo cho Android 13+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.POST_NOTIFICATIONS}, 101);
+            }
         }
 
+        // Kiểm tra 2FA
+        if (user.isTwoFactorEnabled) {
+            String otp = Helper.generateOTP();
+            Helper.sendOTPNotification(this, otp);
+            // Hiện thêm Toast dự phòng để dễ demo
+            Toast.makeText(this, "Debug OTP: " + otp, Toast.LENGTH_LONG).show();
+            showOTPDialog(user, otp);
+        } else {
+            proceedToMain(user);
+        }
+    }
+
+    private void showOTPDialog(UserEntity user, String correctOtp) {
+        EditText etOtp = new EditText(this);
+        etOtp.setHint("Enter 6-digit OTP");
+        etOtp.setPadding(60, 40, 60, 40);
+        etOtp.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+        etOtp.setText(correctOtp); // Tự động điền mã để demo dễ dàng hơn
+
+        new AlertDialog.Builder(this)
+                .setTitle("2FA Verification")
+                .setMessage("A verification code has been sent to your device.\n\nFor demo purposes, your code is: " + correctOtp)
+                .setView(etOtp)
+                .setCancelable(false)
+                .setPositiveButton("Verify", (dialog, which) -> {
+                    String input = etOtp.getText().toString().trim();
+                    if (input.equals(correctOtp)) {
+                        proceedToMain(user);
+                    } else {
+                        Toast.makeText(this, "Invalid OTP. Access Denied.", Toast.LENGTH_LONG).show();
+                    }
+                })
+                .setNegativeButton("Cancel", null)
+                .show();
+    }
+
+    private void proceedToMain(UserEntity user) {
         // Lưu session
         sessionManager.saveLoginSession(user.id, user.email, user.fullName);
 
@@ -73,7 +118,12 @@ public class LoginActivity extends AppCompatActivity {
         int level = Math.max(1, user.xpPoints / 100 + 1);
         leaderboardRepo.syncUser(user.email, user.fullName, user.xpPoints, level);
 
-        startActivity(new Intent(this, MainActivity.class));
+        // Kiểm tra xem đã chọn sở thích chưa
+        if (user.educationLevel == null || user.educationLevel.isEmpty()) {
+            startActivity(new Intent(this, OnboardingActivity.class));
+        } else {
+            startActivity(new Intent(this, MainActivity.class));
+        }
         finish();
     }
 }

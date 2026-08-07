@@ -43,4 +43,8 @@ public interface UserDao {
     // Cập nhật avatar
     @Query("UPDATE users SET avatarPath = :path WHERE id = :userId")
     void updateAvatar(int userId, String path);
+
+    // Cập nhật trạng thái 2FA
+    @Query("UPDATE users SET isTwoFactorEnabled = :enabled WHERE id = :userId")
+    void updateTwoFactor(int userId, boolean enabled);
 }

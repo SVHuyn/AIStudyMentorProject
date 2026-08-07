@@ -5,14 +5,22 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.text.TextUtils;
 import android.util.Patterns;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.os.Build;
+import androidx.core.app.NotificationCompat;
+import com.example.realprojectaistudymentor.R;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+import java.util.Random;
 
 public class Helper {
+
+    private static final String CHANNEL_ID = "2FA_CHANNEL";
 
     // Format date thành chuỗi dễ đọc
     public static String formatDate(Date date) {
@@ -90,5 +98,34 @@ public class Helper {
         if (score <= 2) return "Weak";
         if (score == 3) return "Medium";
         return "Strong";
+    }
+
+    // Tạo mã OTP 6 số ngẫu nhiên
+    public static String generateOTP() {
+        Random random = new Random();
+        int otp = 100000 + random.nextInt(900000);
+        return String.valueOf(otp);
+    }
+
+    // Gửi thông báo chứa mã OTP (Mô phỏng 2FA)
+    public static void sendOTPNotification(Context context, String otp) {
+        NotificationManager notificationManager = (NotificationManager)
+                context.getSystemService(Context.NOTIFICATION_SERVICE);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel channel = new NotificationChannel(
+                    CHANNEL_ID, "Two-Factor Authentication",
+                    NotificationManager.IMPORTANCE_HIGH);
+            notificationManager.createNotificationChannel(channel);
+        }
+
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_ID)
+                .setSmallIcon(R.mipmap.ic_launcher)
+                .setContentTitle("AI Study Mentor: Verification Code")
+                .setContentText("Your OTP code is: " + otp)
+                .setPriority(NotificationCompat.PRIORITY_HIGH)
+                .setAutoCancel(true);
+
+        notificationManager.notify(1, builder.build());
     }
 }

@@ -95,6 +95,7 @@ public class ProfileFragment extends Fragment {
 
         // Toggle 2FA
         switch2FA.setOnCheckedChangeListener((btn, isChecked) -> {
+            userRepo.updateTwoFactor(sessionManager.getUserId(), isChecked);
             Toast.makeText(requireContext(),
                     isChecked ? "2FA enabled" : "2FA disabled",
                     Toast.LENGTH_SHORT).show();

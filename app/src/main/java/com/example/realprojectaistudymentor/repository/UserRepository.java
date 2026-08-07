@@ -65,4 +65,9 @@ public class UserRepository {
     public void saveAvatar(int userId, String avatarPath) {
         userDao.updateAvatar(userId, avatarPath);
     }
+
+    // Cập nhật trạng thái 2FA
+    public void updateTwoFactor(int userId, boolean enabled) {
+        userDao.updateTwoFactor(userId, enabled);
+    }
 }
